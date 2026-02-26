@@ -134,10 +134,7 @@ def _local_injection_detect(text: str) -> bool:
     try:
         classifier = _get_local_injection_pipeline()
         results = classifier(text)
-        if isinstance(results, list) and results:
-            result = results[0]
-        else:
-            result = results
+        result = results[0] if isinstance(results, list) and results else results
 
         label = str(result.get("label", "")).upper()
         score = float(result.get("score", 0.0))
@@ -168,15 +165,13 @@ def validate_input(question: str) -> str:
         )
 
     if settings.enable_prompt_injection_guard:
-        if settings.injection_guard_provider.lower() == "rebuff":
-            if _rebuff_injection_detect(question):
-                logger.warning("Prompt injection detected (Rebuff)", snippet=question[:100])
-                raise GuardrailViolationError("Input contains disallowed content.")
+        if settings.injection_guard_provider.lower() == "rebuff" and _rebuff_injection_detect(question):
+            logger.warning("Prompt injection detected (Rebuff)", snippet=question[:100])
+            raise GuardrailViolationError("Input contains disallowed content.")
 
-        if settings.injection_guard_provider.lower() == "local":
-            if _local_injection_detect(question):
-                logger.warning("Prompt injection detected (local)", snippet=question[:100])
-                raise GuardrailViolationError("Input contains disallowed content.")
+        if settings.injection_guard_provider.lower() == "local" and _local_injection_detect(question):
+            logger.warning("Prompt injection detected (local)", snippet=question[:100])
+            raise GuardrailViolationError("Input contains disallowed content.")
 
         if _INJECTION_RE.search(question):
             logger.warning("Prompt injection attempt detected", snippet=question[:100])

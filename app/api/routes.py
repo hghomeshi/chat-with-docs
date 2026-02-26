@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from tempfile import NamedTemporaryFile
+from typing import Annotated
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
 
@@ -45,7 +46,7 @@ async def health_check() -> HealthResponse:
 
 
 @router.post("/ingest", response_model=IngestResponse, status_code=201, tags=["ingestion"])
-async def ingest(file: UploadFile = File(...)) -> IngestResponse:
+async def ingest(file: Annotated[UploadFile, File(...)]) -> IngestResponse:
 	if not file.filename:
 		raise HTTPException(status_code=400, detail="Filename is required.")
 

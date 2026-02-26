@@ -58,7 +58,7 @@ def rerank(
         scores = model.predict(pairs)
 
         ranked = sorted(
-            zip(chunks, scores), key=lambda x: x[1], reverse=True
+            zip(chunks, scores, strict=False), key=lambda x: x[1], reverse=True
         )
         result = []
         for chunk, score in ranked[:top_n]:

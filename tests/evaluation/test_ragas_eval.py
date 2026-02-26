@@ -9,6 +9,7 @@ Requires: OPENAI_API_KEY, running Qdrant, and the sample docs pre-ingested.
 from __future__ import annotations
 
 import os
+
 import pytest
 from datasets import Dataset
 
@@ -31,9 +32,9 @@ def test_ragas_faithfulness_and_relevancy():
     except ImportError:
         pytest.skip("ragas not installed")
 
+    from app.core.config import get_settings
     from app.graph.pipeline import rag_graph
     from app.graph.state import GraphState
-    from app.core.config import get_settings
 
     settings = get_settings()
     questions, answers, contexts, ground_truths = [], [], [], []

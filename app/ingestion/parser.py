@@ -19,7 +19,6 @@ from docx import Document as DocxDocument
 
 from app.core.exceptions import DocumentParsingError
 from app.core.logging import get_logger
-from app.core.models import DocumentChunk
 
 logger = get_logger(__name__)
 

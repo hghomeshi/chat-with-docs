@@ -1,10 +1,7 @@
 """Unit tests for the chunking module — no API calls, uses recursive mode."""
 from __future__ import annotations
 
-import pytest
-
 from app.ingestion.chunker import chunk_pages
-
 
 SAMPLE_PAGES = [
     {

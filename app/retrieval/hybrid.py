@@ -14,7 +14,7 @@ from app.core.config import get_settings
 from app.core.logging import get_logger
 from app.core.models import RetrievedChunk
 from app.ingestion.embedder import embed_query
-from app.ingestion.vector_store import hybrid_search, get_client
+from app.ingestion.vector_store import get_client, hybrid_search
 
 logger = get_logger(__name__)
 

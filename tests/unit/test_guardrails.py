@@ -4,10 +4,9 @@ from __future__ import annotations
 import pytest
 
 from app.core.exceptions import GuardrailViolationError
+from app.core.models import RetrievedChunk
 from app.guardrails.input_guard import scrub_pii, validate_input
 from app.guardrails.output_guard import check_retrieval_quality
-from app.core.models import RetrievedChunk
-
 
 # ── PII scrubbing ──────────────────────────────────────────────────────────────
 

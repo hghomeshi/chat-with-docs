@@ -3,7 +3,7 @@ LangGraph state schema — typed dict that flows through all graph nodes.
 """
 from __future__ import annotations
 
-from typing import TypedDict, Any
+from typing import TypedDict
 
 from app.core.models import QueryResponse, RetrievedChunk
 

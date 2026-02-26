@@ -18,16 +18,13 @@ from __future__ import annotations
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http.models import (
     Distance,
-    PointStruct,
-    VectorParams,
-    SparseVectorParams,
-    SparseIndexParams,
-    Filter,
     FieldCondition,
+    Filter,
     MatchValue,
-    SearchRequest,
-    NamedVector,
-    NamedSparseVector,
+    PointStruct,
+    SparseIndexParams,
+    SparseVectorParams,
+    VectorParams,
 )
 
 from app.core.config import get_settings
@@ -79,7 +76,7 @@ async def upsert_chunks(
 ) -> None:
     """Upsert chunks + their vectors into Qdrant."""
     points = []
-    for i, (chunk, embedding) in enumerate(zip(chunks, embeddings)):
+    for i, (chunk, embedding) in enumerate(zip(chunks, embeddings, strict=False)):
         vector_dict = {"dense": embedding}
         if sparse_embeddings and i < len(sparse_embeddings):
             vector_dict["sparse"] = {
@@ -122,7 +119,7 @@ async def hybrid_search(
             must=[FieldCondition(key="filename", match=MatchValue(value=filename_filter))]
         )
     try:
-        from qdrant_client.http.models import Prefetch, SparseVector, FusionQuery
+        from qdrant_client.http.models import FusionQuery, Prefetch, SparseVector
         
         prefetch = [
             Prefetch(

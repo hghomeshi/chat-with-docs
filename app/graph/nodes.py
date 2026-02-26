@@ -34,7 +34,6 @@ from app.graph.prompts import (
 from app.graph.state import GraphState
 from app.guardrails.input_guard import validate_input
 from app.guardrails.output_guard import (
-    NO_CONTEXT_ANSWER,
     build_no_context_response,
     check_retrieval_quality,
     validate_output,
@@ -93,7 +92,6 @@ async def grade_documents_node(state: GraphState) -> GraphState:
         state["proceed_to_generate"] = True
         return state
 
-    settings = get_settings()
     client = _get_llm_client()
 
     relevant_chunks = []

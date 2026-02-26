@@ -10,8 +10,8 @@ to stay well within rate limits and handle large ingestion jobs gracefully.
 """
 from __future__ import annotations
 
-from openai import AsyncOpenAI
 from fastembed import SparseTextEmbedding
+from openai import AsyncOpenAI
 
 from app.core.config import get_settings
 from app.core.exceptions import EmbeddingError
