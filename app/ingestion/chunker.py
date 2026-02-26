@@ -16,7 +16,7 @@ would detect and preserve these via regex or Unstructured.io element types.
 from __future__ import annotations
 
 import uuid
-from typing import Literal, Protocol
+from typing import Any, Literal, Protocol
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
@@ -179,11 +179,12 @@ def _split_text(text: str, mode: ChunkMode, chunk_size: int, chunk_overlap: int)
             from langchain_openai import OpenAIEmbeddings
 
             settings = get_settings()
+            from pydantic import SecretStr
             embeddings = OpenAIEmbeddings(
                 model=settings.embedding_model,
-                openai_api_key=settings.openai_api_key,
+                api_key=SecretStr(settings.openai_api_key),
             )
-            splitter = SemanticChunker(
+            splitter: Any = SemanticChunker(
                 embeddings=embeddings,
                 breakpoint_threshold_type="percentile",
                 breakpoint_threshold_amount=85,

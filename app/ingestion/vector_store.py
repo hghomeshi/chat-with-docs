@@ -15,6 +15,8 @@ infra coupling and requires manual HNSW tuning.
 """
 from __future__ import annotations
 
+from typing import Any
+
 from qdrant_client import AsyncQdrantClient
 from qdrant_client.http.models import (
     Distance,
@@ -77,7 +79,7 @@ async def upsert_chunks(
     """Upsert chunks + their vectors into Qdrant."""
     points = []
     for i, (chunk, embedding) in enumerate(zip(chunks, embeddings, strict=False)):
-        vector_dict = {"dense": embedding}
+        vector_dict: dict[str, Any] = {"dense": embedding}
         if sparse_embeddings and i < len(sparse_embeddings):
             vector_dict["sparse"] = {
                 "indices": sparse_embeddings[i]["indices"],
@@ -119,7 +121,7 @@ async def hybrid_search(
             must=[FieldCondition(key="filename", match=MatchValue(value=filename_filter))]
         )
     try:
-        from qdrant_client.http.models import FusionQuery, Prefetch, SparseVector
+        from qdrant_client.http.models import Fusion, FusionQuery, Prefetch, SparseVector
         
         prefetch = [
             Prefetch(
@@ -129,8 +131,8 @@ async def hybrid_search(
             ),
             Prefetch(
                 query=SparseVector(
-                    indices=sparse_query_vector["indices"],
-                    values=sparse_query_vector["values"],
+                    indices=sparse_query_vector["indices"],  # type: ignore
+                    values=sparse_query_vector["values"],  # type: ignore
                 ),
                 using="sparse",
                 limit=top_k,
@@ -140,7 +142,7 @@ async def hybrid_search(
         response = await client.query_points(
             collection_name=collection,
             prefetch=prefetch,
-            query=FusionQuery(fusion="rrf"),
+            query=FusionQuery(fusion=Fusion.RRF),
             limit=top_k,
             query_filter=qdrant_filter,
             with_payload=True,
@@ -151,13 +153,13 @@ async def hybrid_search(
 
     return [
         RetrievedChunk(
-            chunk_id=str(hit.id),
-            doc_id=hit.payload["doc_id"],
-            filename=hit.payload["filename"],
-            page=hit.payload.get("page"),
-            text=hit.payload["text"],
-            score=hit.score,
-            metadata={k: v for k, v in hit.payload.items()
+            chunk_id=str(hit.id),  # type: ignore
+            doc_id=hit.payload["doc_id"],  # type: ignore
+            filename=hit.payload["filename"],  # type: ignore
+            page=hit.payload.get("page"),  # type: ignore
+            text=hit.payload["text"],  # type: ignore
+            score=hit.score,  # type: ignore
+            metadata={k: v for k, v in hit.payload.items()  # type: ignore
                        if k not in ("doc_id", "filename", "page", "text")},
         )
         for hit in results

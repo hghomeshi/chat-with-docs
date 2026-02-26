@@ -11,6 +11,7 @@ This implements the self-corrective RAG loop without infinite recursion.
 from __future__ import annotations
 
 from langgraph.graph import END, START, StateGraph
+from langgraph.graph.state import CompiledStateGraph
 
 from app.graph.nodes import (
     generate_node,
@@ -29,7 +30,7 @@ def _should_rewrite(state: GraphState) -> str:
     return "generate"
 
 
-def build_rag_graph() -> StateGraph:
+def build_rag_graph() -> CompiledStateGraph:
     graph = StateGraph(GraphState)
 
     # Add nodes

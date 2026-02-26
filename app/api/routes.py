@@ -106,13 +106,13 @@ async def list_documents(collection: str | None = None) -> dict:
 			with_payload=True,
 			with_vectors=False,
 		)
-		records = [{"id": str(r.id), **r.payload} for r in records]
+		records_list = [{"id": str(r.id), **(r.payload or {})} for r in records]
 	except Exception as exc:
 		logger.warning("Failed to list documents", error=str(exc))
 		raise HTTPException(status_code=503, detail="Qdrant unavailable.") from exc
 
 	docs: dict[tuple[str | None, str], dict[str, str | None]] = {}
-	for record in records:
+	for record in records_list:
 		filename = record.get("filename")
 		if not filename:
 			continue
